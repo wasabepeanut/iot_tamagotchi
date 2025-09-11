@@ -10,17 +10,12 @@ void Button::begin() {
 }
 
 bool Button::isPressed() {
-    if (digitalRead(_pin) == LOW) { // Button pressed
+    if (digitalRead(_pin) == LOW) {
         // Wait for release to avoid multiple triggers
         while (digitalRead(_pin) == LOW) {
             delay(10);
         }
-        _pressCount++;  // Increment counter
         return true;
     }
     return false;
-}
-
-int Button::getPressCount() {
-    return _pressCount;
 }

@@ -5,15 +5,14 @@
 #include <Adafruit_ST7735.h>
 
 // Pin definitions
-#define TFT_CS     5   // Chip Select
-#define TFT_DC     16  // Data/Command
-#define TFT_RST    4   // Reset
+#define TFT_CS     5
+#define TFT_DC     16
+#define TFT_RST    4
 
-// Expose TFT display object
 extern Adafruit_ST7735 tft;
 
-// Functions
 void monitorInit();
-void drawColoredWord(const char* word, uint16_t colors[], int set_x, int set_y);
+void drawText(const char* text, uint16_t color, int x, int y, int size=2);
+void clearArea(int x, int y, int w, int h);
 
 #endif
