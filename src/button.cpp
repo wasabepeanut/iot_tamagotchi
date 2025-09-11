@@ -7,15 +7,23 @@ Button::Button(int pin) {
 
 void Button::begin() {
     pinMode(_pin, INPUT_PULLUP);
+    _state = false;
+    _lastState = false;
+    _pressedEvent = false;
+}
+
+void Button::update() {
+    _lastState = _state;
+    _state = (digitalRead(_pin) == LOW);  // LOW = pressed
+
+    // Detect press event (released → pressed)
+    _pressedEvent = (!_lastState && _state);
 }
 
 bool Button::isPressed() {
-    if (digitalRead(_pin) == LOW) {
-        // Wait for release to avoid multiple triggers
-        while (digitalRead(_pin) == LOW) {
-            delay(10);
-        }
-        return true;
-    }
-    return false;
+    return _pressedEvent;  // True only on the loop when pressed
+}
+
+bool Button::getState() {
+    return _state;          // True while button is held down
 }

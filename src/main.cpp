@@ -7,21 +7,10 @@ Button redButton(26);
 Button yellowButton(27);
 Button greenButton(14);
 
-int blueCount = 0;
-int redCount = 0;
-int yellowCount = 0;
-int greenCount = 0;
-
-void drawCounter(const char* label, uint16_t color, int y, int count) {
-    clearArea(0, y, tft.width(), 30);  // Clear previous number
-    drawText(label, color, 15, y, 1);
-
-    char buffer[10];
-    sprintf(buffer, "%d", count);
-
-    int textWidth = strlen(buffer) * 6 * 2;
-    int x = tft.width() - textWidth - 10;
-    drawText(buffer, color, x, y, 2);
+void drawButtonState(const char* label, uint16_t labelColor, int y, bool pressed) {
+    clearArea(0, y, tft.width(), 30);
+    drawText(label, labelColor, 15, y, 1);
+    drawText(pressed ? "PRESSED" : "RELEASED", ST77XX_WHITE, 100, y, 1);
 }
 
 void setup() {
@@ -33,15 +22,17 @@ void setup() {
 }
 
 void loop() {
-    if (blueButton.isPressed()) blueCount++;
-    if (redButton.isPressed()) redCount++;
-    if (yellowButton.isPressed()) yellowCount++;
-    if (greenButton.isPressed()) greenCount++;
+    // Update button states (non-blocking)
+    blueButton.update();
+    redButton.update();
+    yellowButton.update();
+    greenButton.update();
 
-    drawCounter("Blue:", ST77XX_BLUE, 0, blueCount);
-    drawCounter("Red:", ST77XX_RED, 30, redCount);
-    drawCounter("Yellow:", ST77XX_YELLOW, 60, yellowCount);
-    drawCounter("Green:", ST77XX_GREEN, 90, greenCount);
+    // Display current state
+    drawButtonState("Blue:", ST77XX_BLUE, 0, blueButton.getState());
+    drawButtonState("Red:", ST77XX_RED, 30, redButton.getState());
+    drawButtonState("Yellow:", ST77XX_YELLOW, 60, yellowButton.getState());
+    drawButtonState("Green:", ST77XX_GREEN, 90, greenButton.getState());
 
-    delay(50);
+    delay(50);  // Optional small delay for UI refresh
 }
