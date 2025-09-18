@@ -5,10 +5,10 @@
 #include <Arduino.h>
 
 // Buttons
-Button blueButton(25);   // Feed
+Button blueButton(25);   // Reset
 Button redButton(26);    // Play
 Button yellowButton(27); // Sleep
-Button greenButton(14);  // Reset
+Button greenButton(14);  // Feed
 
 // Pet state
 int food, energy, happiness;
@@ -170,14 +170,15 @@ void drawStats() {
     // y position for top of bar
     int y = 5 + tallestIcon; // top margin + tallest icon
 
-    int xFood   = spacing;
-    int xHappy  = spacing * 2 + barWidth;
-    int xEnergy = spacing * 3 + barWidth * 2;
+    // Reordered positions: happiness (left), energy (center), food (right)
+    int xHappy  = spacing;
+    int xEnergy = spacing * 2 + barWidth;
+    int xFood   = spacing * 3 + barWidth * 2;
 
     // Draw bars with icons
-    drawBar(xFood, y, food, prevFood, ST77XX_RED, foodIcon, 8);         // Heart
     drawBar(xHappy, y, happiness, prevHappiness, ST77XX_GREEN, happinessIcon, 8); // Smiley
     drawBar(xEnergy, y, energy, prevEnergy, ST77XX_YELLOW, energyIcon, 10);       // Lightning
+    drawBar(xFood, y, food, prevFood, ST77XX_RED, foodIcon, 8);         // Heart
 
     prevFood = food;
     prevHappiness = happiness;
@@ -211,30 +212,31 @@ void tamagotchiUpdate() {
     greenButton.update();
 
     // Edge detection (pressed now, not pressed before)
+
     bool blueState = blueButton.getState();
     if (blueState && !prevBlueState) {
-        if (food < 100) food = min(100, food + 10); // limit
+        food = happiness = energy = 50; // Reset all stats
         saveState();
     }
     prevBlueState = blueState;
 
     bool redState = redButton.getState();
     if (redState && !prevRedState) {
-        if (energy < 100) energy = min(100, energy + 10);
+        if (food < 100) food = min(100, food + 10); // Health
         saveState();
     }
     prevRedState = redState;
 
     bool yellowState = yellowButton.getState();
     if (yellowState && !prevYellowState) {
-        if (happiness < 100) happiness = min(100, happiness + 10);
+        if (energy < 100) energy = min(100, energy + 10); // Stamina
         saveState();
     }
     prevYellowState = yellowState;
 
     bool greenState = greenButton.getState();
     if (greenState && !prevGreenState) {
-        food = happiness = energy = 50;
+        if (happiness < 100) happiness = min(100, happiness + 10); // Happiness
         saveState();
     }
     prevGreenState = greenState;
