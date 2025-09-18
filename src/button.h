@@ -5,15 +5,15 @@ class Button {
 public:
     Button(int pin);
     void begin();
-    void update();          // Update button state, call every loop
-    bool isPressed();       // Returns true only on the moment it is pressed
-    bool getState();        // Returns current state: pressed or released
+    void update();          
+    bool isPressed();       
+    bool getState();        
 
 private:
     int _pin;
-    bool _state = false;       // Current state
-    bool _lastState = false;   // Previous state
-    bool _pressedEvent = false; // True for one loop when pressed
+    bool _state = false;
+    bool _lastState = false;
+    bool _pressedEvent = false;
 };
 
 #endif

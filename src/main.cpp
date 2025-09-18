@@ -1,10 +1,16 @@
-#include "tamagotchi.h"
+#include "pet.h"
+#include "controls.h"
+#include "display.h"
 
 void setup() {
-    tamagotchiInit();
+    petInit();
+    controlsInit();
+    displayInit();
 }
 
 void loop() {
-    tamagotchiUpdate();
+    petUpdate();
+    controlsUpdate();
+    displayUpdate();
     delay(50);
 }

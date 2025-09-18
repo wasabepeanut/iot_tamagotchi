@@ -14,16 +14,10 @@ void Button::begin() {
 
 void Button::update() {
     _lastState = _state;
-    _state = (digitalRead(_pin) == LOW);  // LOW = pressed
+    _state = (digitalRead(_pin) == LOW);  
 
-    // Detect press event (released → pressed)
     _pressedEvent = (!_lastState && _state);
 }
 
-bool Button::isPressed() {
-    return _pressedEvent;  // True only on the loop when pressed
-}
-
-bool Button::getState() {
-    return _state;          // True while button is held down
-}
+bool Button::isPressed() { return _pressedEvent; }
+bool Button::getState() { return _state; }
