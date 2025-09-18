@@ -41,7 +41,7 @@ void petInit() {
 
 void petUpdate() {
     unsigned long now = millis();
-    if (now - lastHungerUpdate > 300000) { myPet.food = max(0, myPet.food - 1); lastHungerUpdate = now; petSave(); }
-    if (now - lastHappinessUpdate > 600000) { myPet.happiness = max(0, myPet.happiness - 1); lastHappinessUpdate = now; petSave(); }
-    if (now - lastEnergyUpdate > 3600000) { myPet.energy = max(0, myPet.energy - 1); lastEnergyUpdate = now; petSave(); }
+    if (now - lastHungerUpdate > 300000) { myPet.food = max(0, myPet.food - 25); lastHungerUpdate = now; petSave(); }
+    if (now - lastHappinessUpdate > 600000) { myPet.happiness = max(0, myPet.happiness - 25); lastHappinessUpdate = now; petSave(); }
+    if (now - lastEnergyUpdate > 3600000) { myPet.energy = max(0, myPet.energy - 25); lastEnergyUpdate = now; petSave(); }
 }
