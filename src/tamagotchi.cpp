@@ -24,9 +24,9 @@ const uint8_t foodIcon[10] = {
   0b01111110, //  ******
   0b00111100, //   ****
   0b00011000, //    **
-  0b00000000,  //
-  0b00000000,
-  0b00000000      
+  0b00000000, //  
+  0b00000000, //    
+  0b00000000  //      
 };
 
 
@@ -41,8 +41,8 @@ const uint8_t happinessIcon[10] = {
   0b10011001, // *  **  *
   0b01000010, //  *    *
   0b00111100, //   ****
-  0b00000000,
-  0b00000000
+  0b00000000, //  (blank padding)
+  0b00000000  //  (blank padding)
 };
 
 
@@ -176,9 +176,9 @@ void drawStats() {
     int xFood   = spacing * 3 + barWidth * 2;
 
     // Draw bars with icons
-    drawBar(xHappy, y, happiness, prevHappiness, ST77XX_GREEN, happinessIcon, 8); // Smiley
+    drawBar(xHappy, y, happiness, prevHappiness, ST77XX_GREEN, happinessIcon, 10); // Smiley
     drawBar(xEnergy, y, energy, prevEnergy, ST77XX_YELLOW, energyIcon, 10);       // Lightning
-    drawBar(xFood, y, food, prevFood, ST77XX_RED, foodIcon, 8);         // Heart
+    drawBar(xFood, y, food, prevFood, ST77XX_RED, foodIcon, 10);         // Heart
 
     prevFood = food;
     prevHappiness = happiness;
