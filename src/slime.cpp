@@ -1,4 +1,5 @@
 #include "slime.h"
+#include "monitor.h"
 
 const uint64_t slimeBody[52] = {
   0b0000000000000000000000000111111111100000000000000000000000000,

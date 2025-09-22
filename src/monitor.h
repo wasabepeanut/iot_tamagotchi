@@ -1,3 +1,4 @@
+// monitor.h
 #ifndef MONITOR_H
 #define MONITOR_H
 
@@ -7,6 +8,9 @@
 #define TFT_CS     5
 #define TFT_DC     16
 #define TFT_RST    4
+
+#define SCREEN_WIDTH  160
+#define SCREEN_HEIGHT 128
 
 extern Adafruit_ST7735 tft;
 

@@ -1,4 +1,5 @@
 #include "stats.h"
+#include "monitor.h"
 
 // --- Previous values for dirty-checking ---
 static int prevFood = -1;
