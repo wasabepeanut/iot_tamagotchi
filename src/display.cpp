@@ -1,14 +1,23 @@
+// --- Includes ---
 #include "display.h"
 #include "monitor.h"
 #include "pet.h"
 #include <stdint.h>
 
-// Previous values (to prevent flicker)
+// --- Constants ---
+constexpr int SCREEN_WIDTH = 128;
+constexpr int SCREEN_HEIGHT = 160;
+constexpr int SLIME_WIDTH = 60;
+constexpr int SLIME_HEIGHT = 50;
+constexpr int SLIME_SCALE = 2;
+constexpr int SLIME_OFFSET_Y = 10; // Move slime down
+
+// --- Previous stat values (for flicker prevention) ---
 static int prevFood = -1;
 static int prevEnergy = -1;
 static int prevHappiness = -1;
 
-// Slime pixel art: 50 rows × 60 columns
+// --- Slime pixel art: 50 rows × 60 columns ---
 const uint64_t slimeBody[52] = {
   0b0000000000000000000000000111111111100000000000000000000000000,
   0b0000000000000000000000000111111111100000000000000000000000000,
@@ -64,46 +73,29 @@ const uint64_t slimeBody[52] = {
 };
 
 // Simple 8x8 icons
+// --- Stat icons ---
 static const uint8_t foodIcon[10] = {
-  0b01100110,
-  0b11111111,
-  0b11111111,
-  0b11111111,
-  0b01111110,
-  0b00111100,
-  0b00011000,
-  0b00000000,
-  0b00000000,
-  0b00000000
+    0b01100110,0b11111111,0b11111111,0b11111111,0b01111110,0b00111100,0b00011000,0b00000000,0b00000000,0b00000000
 };
 static const uint8_t happinessIcon[10] = {
-  0b00111100,
-  0b01000010,
-  0b10100101,
-  0b10000001,
-  0b10100101,
-  0b10011001,
-  0b01000010,
-  0b00111100,
-  0b00000000,
-  0b00000000
+    0b00111100,0b01000010,0b10100101,0b10000001,0b10100101,0b10011001,0b01000010,0b00111100,0b00000000,0b00000000
 };
 static const uint8_t energyIcon[10] = {
-  0b00000100,
-  0b00001100,
-  0b00111000,
-  0b01111000,
-  0b00011100,
-  0b00011000,
-  0b00110000,
-  0b01000000
+    0b00000100,0b00001100,0b00111000,0b01111000,0b00011100,0b00011000,0b00110000,0b01000000,0b00000000,0b00000000
 };
 
-// Draw a bar + icon
+// --- Helper: Draw scaled pixel block ---
+inline void drawBlock(int x, int y, uint16_t color, int scale = SLIME_SCALE) {
+    for (int dy = 0; dy < scale; dy++)
+        for (int dx = 0; dx < scale; dx++)
+            tft.drawPixel(x + dx, y + dy, color);
+}
+
+// --- Draw a bar + icon ---
 static void drawBar(int x, int y, int value, int prevValue, uint16_t color, const uint8_t* icon, int iconHeight) {
     if (value == prevValue) return;
 
-    int barWidth = 40, barHeight = 10, iconSpacing = 2;
+    constexpr int barWidth = 40, barHeight = 10, iconSpacing = 2;
     int totalHeight = iconHeight + iconSpacing + barHeight;
 
     clearArea(x - 1, y - iconHeight, barWidth + 2, totalHeight + 2);
@@ -120,13 +112,11 @@ static void drawBar(int x, int y, int value, int prevValue, uint16_t color, cons
     tft.fillRect(x, y, map(value, 0, 100, 0, barWidth), barHeight, color);
 }
 
-// Draw all stats
+// --- Draw all stats ---
 static void drawStats() {
-    int barWidth = 40;
-    int numBars = 3;
+    constexpr int barWidth = 40, numBars = 3, tallestIcon = 10;
     int totalWidth = numBars * barWidth;
-    int spacing = (tft.width() - totalWidth) / (numBars + 1);
-    int tallestIcon = 10;
+    int spacing = (SCREEN_WIDTH - totalWidth) / (numBars + 1);
     int y = 5 + tallestIcon;
 
     int xHappy  = spacing;
@@ -142,32 +132,34 @@ static void drawStats() {
     prevEnergy = myPet.energy;
 }
 
-// Draw slime pixel art centered
+// --- Draw slime pixel art centered ---
 void drawSlime(uint16_t color = ST77XX_BLUE) {
-    int width = 60;   // slime width in pixels
-    int height = 50;  // slime height in pixels
+    int scaledWidth = SLIME_WIDTH * SLIME_SCALE;
+    int scaledHeight = SLIME_HEIGHT * SLIME_SCALE;
+    int startX = (SCREEN_WIDTH - scaledWidth) / 2;
+    int startY = (SCREEN_HEIGHT - scaledHeight) / 2 + SLIME_OFFSET_Y;
 
-    int startX = (128 - width) / 2;   // center horizontally
-    int startY = (160 - height) / 2;  // center vertically
-
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            if (slimeBody[y] & (1ULL << (width - 1 - x))) {
-                tft.drawPixel(startX + x, startY + y, color);
+    for (int y = 0; y < SLIME_HEIGHT; y++) {
+        for (int x = 0; x < SLIME_WIDTH; x++) {
+            if (slimeBody[y] & (1ULL << (SLIME_WIDTH - 1 - x))) {
+                drawBlock(startX + x * SLIME_SCALE, startY + y * SLIME_SCALE, color, SLIME_SCALE);
             }
         }
     }
 }
 
-// Initialize display
+// --- Initialize display ---
 void displayInit() {
     monitorInit();
     drawSlime();   // Draw slime in the center
     drawStats();
 }
 
-// Update display
+// --- Update display ---
 void displayUpdate() {
+    // Only redraw stats if changed
+    if (myPet.food != prevFood || myPet.energy != prevEnergy || myPet.happiness != prevHappiness) {
+        drawStats();
+    }
     drawSlime();   // Keep slime visible
-    drawStats();
 }
