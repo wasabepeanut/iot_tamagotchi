@@ -9,7 +9,7 @@
 // --- Constants ---
 constexpr int SLIME_WIDTH = 60;
 constexpr int SLIME_HEIGHT = 50;
-constexpr int SLIME_SCALE = 2;
+constexpr int SLIME_SCALE = 1;
 constexpr int SLIME_OFFSET_Y = 10;
 
 // --- Functions ---

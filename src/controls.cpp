@@ -28,7 +28,7 @@ void controlsUpdate() {
     greenButton.update();
 
     bool blueState = blueButton.getState();
-    if (blueState && !prevBlueState) { myPet.food = myPet.energy = myPet.happiness = 50; petSave(); }
+    if (blueState && !prevBlueState) { myPet.food = myPet.energy = myPet.happiness = 10; petSave(); }
     prevBlueState = blueState;
 
     bool redState = redButton.getState();
