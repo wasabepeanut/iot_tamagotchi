@@ -14,5 +14,4 @@ void loop() {
     controlsUpdate();
     displayUpdate();
     slimeAnimate();
-    delay(50);
 }
