@@ -1,6 +1,7 @@
 // Animation state
 bool slimeToggle = false;
 unsigned long lastSlimeSwitch = 0;
+bool slimeNeedsRedraw = true;
 
 #include "slime.h"
 #include "monitor.h"
@@ -125,13 +126,17 @@ static inline void drawBlock(int x, int y, uint16_t color, int scale = SLIME_SCA
 
 // --- Draw slime pixel art centered ---
 void slimeDraw(uint16_t color) {
+    static bool lastToggle = false;
     int scaledWidth = SLIME_WIDTH * SLIME_SCALE;
     int scaledHeight = SLIME_HEIGHT * SLIME_SCALE;
     int startX = (SCREEN_WIDTH - scaledWidth) / 2;
     int startY = (SCREEN_HEIGHT - scaledHeight) / 2 + SLIME_OFFSET_Y;
 
-    // Clear previous slime (fill with background color)
-    tft.fillRect(startX, startY, scaledWidth, scaledHeight, ST77XX_BLACK);
+    // Only clear and redraw if frame changed
+    if (slimeToggle != lastToggle) {
+        tft.fillRect(startX, startY, scaledWidth, scaledHeight, ST77XX_BLACK);
+        lastToggle = slimeToggle;
+    }
 
     // Choose which body to draw
     const uint64_t* body = slimeToggle ? slimeBody2 : slimeBody;
@@ -142,10 +147,12 @@ void slimeDraw(uint16_t color) {
             }
         }
     }
+}
 
-    // Animation: switch body every second
+// Call this in your main loop to update animation state
+void slimeAnimate() {
     unsigned long now = millis();
-    if (now - lastSlimeSwitch > 1000) {
+    if (now - lastSlimeSwitch > 500) {
         slimeToggle = !slimeToggle;
         lastSlimeSwitch = now;
     }

@@ -1,6 +1,7 @@
 #include "pet.h"
 #include "controls.h"
 #include "display.h"
+#include "slime.h"
 
 void setup() {
     petInit();
@@ -12,5 +13,6 @@ void loop() {
     petUpdate();
     controlsUpdate();
     displayUpdate();
+    slimeAnimate();
     delay(50);
 }

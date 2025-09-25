@@ -14,5 +14,6 @@ constexpr int SLIME_OFFSET_Y = 10;
 
 // --- Functions ---
 void slimeDraw(uint16_t color = ST77XX_BLUE);
+void slimeAnimate();
 
 #endif
