@@ -9,8 +9,8 @@
 #define TFT_DC     16
 #define TFT_RST    4
 
-#define SCREEN_WIDTH  160
-#define SCREEN_HEIGHT 128
+#define SCREEN_WIDTH  128
+#define SCREEN_HEIGHT 160
 
 extern Adafruit_ST7735 tft;
 
