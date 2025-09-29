@@ -5,6 +5,8 @@ bool slimeNeedsRedraw = true;
 
 #include "slime.h"
 #include "monitor.h"
+#include "stats.h"
+#include "pet.h"
 
 // Slime animation Up
 const uint64_t slimeBody[60] = {
@@ -170,11 +172,11 @@ void slimeDraw(uint16_t color) {
 
 // Call this in your main loop to update animation state
 // Need to access myPet stats
-#include "pet.h"
+
 
 void slimeAnimate() {
-    // Calculate stat average (same as display.cpp)
-    float statAvg = (myPet.food + myPet.energy + myPet.happiness) / 3.0;
+    // Use stat average for animation speed
+    float statAvg = getPetStatAverage();
     unsigned long interval;
     if (statAvg > 66.6) {
         interval = 500; // fast
@@ -184,7 +186,7 @@ void slimeAnimate() {
         interval = 1600; // slow
     }
     unsigned long now = millis();
-    if (now - lastSlimeSwitch > interval) {
+    if (now - lastSlimeSwitch >= interval) {
         slimeToggle = !slimeToggle;
         lastSlimeSwitch = now;
     }

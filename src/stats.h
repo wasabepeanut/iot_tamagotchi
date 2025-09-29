@@ -10,5 +10,6 @@
 // --- Functions ---
 void statsInit();
 void statsUpdate();
+float getPetStatAverage();
 
 #endif

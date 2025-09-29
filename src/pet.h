@@ -11,6 +11,7 @@ struct Pet {
 
 extern Pet myPet;
 
+
 void petInit();
 void petUpdate();
 void petSave();

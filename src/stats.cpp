@@ -1,5 +1,6 @@
 #include "stats.h"
 #include "monitor.h"
+#include "pet.h"
 
 // --- Previous values for dirty-checking ---
 static int prevFood = -1;
@@ -80,4 +81,8 @@ void statsUpdate() {
     if (myPet.food != prevFood || myPet.energy != prevEnergy || myPet.happiness != prevHappiness) {
         drawStats();
     }
+}
+
+float getPetStatAverage() {
+    return (myPet.food + myPet.energy + myPet.happiness) / 3.0f;
 }
