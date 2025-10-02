@@ -28,18 +28,24 @@ void controlsUpdate() {
     greenButton.update();
 
     bool blueState = blueButton.getState();
-    if (blueState && !prevBlueState) { myPet.happiness = myPet.energy = myPet.health = 10; petSave(); }
+    if (blueState && !prevBlueState) { myPet.happiness = myPet.energy = myPet.health = 50; petSave(); }
     prevBlueState = blueState;
 
-    bool redState = redButton.getState();
-    if (redState && !prevRedState) { myPet.health = min(100, myPet.health + 10); petSave(); }
-    prevRedState = redState;
+    if (isPetAlive()) {
+        bool redState = redButton.getState();
+        if (redState && !prevRedState) { myPet.health = min(100, myPet.health + 10); petSave(); }
+        prevRedState = redState;
 
-    bool yellowState = yellowButton.getState();
-    if (yellowState && !prevYellowState) { myPet.energy = min(100, myPet.energy + 10); petSave(); }
-    prevYellowState = yellowState;
+        bool yellowState = yellowButton.getState();
+        if (yellowState && !prevYellowState) { myPet.energy = min(100, myPet.energy + 10); petSave(); }
+        prevYellowState = yellowState;
 
-    bool greenState = greenButton.getState();
-    if (greenState && !prevGreenState) { myPet.happiness = min(100, myPet.happiness + 10); petSave(); }
-    prevGreenState = greenState;
+        bool greenState = greenButton.getState();
+        if (greenState && !prevGreenState) { myPet.happiness = min(100, myPet.happiness + 10); petSave(); }
+        prevGreenState = greenState;
+    } else {
+        prevRedState = redButton.getState();
+        prevYellowState = yellowButton.getState();
+        prevGreenState = greenButton.getState();
+    }
 }

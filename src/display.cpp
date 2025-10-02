@@ -20,7 +20,40 @@ void displayUpdate() {
     } else if (statAvg > 33.3) {
         slimeColor = ST77XX_YELLOW;
     } else {
+        slimeColor = ST77XX_ORANGE;
+    }
+    if (!isPetAlive()) {
         slimeColor = ST77XX_RED;
     }
     slimeDraw(slimeColor);
+
+    // Draw alive timer at bottom
+    displayAliveTimer();
+}
+
+void displayAliveTimer() {
+    static String lastTimerStr = "";
+    static bool lastWasDead = false;
+    if (!isPetAlive()) {
+        String timerStr = getPetAliveTimeString();
+        if (!lastWasDead || timerStr != lastTimerStr) {
+            int timerHeight = 16;
+            // Clear area for both timer and death message
+            clearArea(0, SCREEN_HEIGHT - timerHeight - 20, SCREEN_WIDTH, timerHeight + 20);
+            // Draw death message above timer, same size and color as timer text
+            drawText("Your pet has died", ST77XX_WHITE, 10, SCREEN_HEIGHT - timerHeight - 18, 1);
+            drawText("Alive:", ST77XX_WHITE, 10, SCREEN_HEIGHT - timerHeight + 2, 1);
+            drawText(timerStr.c_str(), ST77XX_WHITE, 60, SCREEN_HEIGHT - timerHeight + 2, 1);
+            lastTimerStr = timerStr;
+        }
+        lastWasDead = true;
+    } else {
+        lastWasDead = false;
+        lastTimerStr = "";
+    }
+}
+
+void clearAliveTimerDisplay() {
+    int timerHeight = 16;
+    clearArea(0, SCREEN_HEIGHT - timerHeight, SCREEN_WIDTH, timerHeight);
 }

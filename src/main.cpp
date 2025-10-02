@@ -13,5 +13,7 @@ void loop() {
     petUpdate();
     controlsUpdate();
     displayUpdate();
-    slimeAnimate();
+    if (isPetAlive()) {
+        slimeAnimate();
+    }
 }

@@ -11,6 +11,8 @@ struct Pet {
 
 extern Pet myPet;
 
+// Returns formatted alive time as hh:mm:ss
+String getPetAliveTimeString();
 
 void petInit();
 void petUpdate();
