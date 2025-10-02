@@ -9,11 +9,11 @@
 // --- Constants ---
 constexpr int SLIME_WIDTH = 60;
 constexpr int SLIME_HEIGHT = 60;
-constexpr int SLIME_SCALE = 1;
 constexpr int SLIME_OFFSET_Y = 10;
+// No scaling used
 
 // --- Functions ---
-void slimeDraw(uint16_t color = ST77XX_BLUE);
+void slimeDraw(uint16_t color);
 void slimeAnimate();
 
 #endif

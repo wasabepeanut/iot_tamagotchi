@@ -136,26 +136,20 @@ const uint64_t slimeBody2[60] = {
 };
 
 
-// --- Helper: Draw scaled pixel block ---
-static inline void drawBlock(int x, int y, uint16_t color, int scale = SLIME_SCALE) {
-    for (int dy = 0; dy < scale; dy++) {
-        for (int dx = 0; dx < scale; dx++) {
-            tft.drawPixel(x + dx, y + dy, color);
-        }
-    }
+// --- Helper: Draw single pixel ---
+static inline void drawBlock(int x, int y, uint16_t color) {
+    tft.drawPixel(x, y, color);
 }
 
 // --- Draw slime pixel art centered ---
 void slimeDraw(uint16_t color) {
     static bool lastToggle = false;
-    int scaledWidth = SLIME_WIDTH * SLIME_SCALE;
-    int scaledHeight = SLIME_HEIGHT * SLIME_SCALE;
-    int startX = (SCREEN_WIDTH - scaledWidth) / 2;
-    int startY = (SCREEN_HEIGHT - scaledHeight) / 2 + SLIME_OFFSET_Y;
+    int startX = (SCREEN_WIDTH - SLIME_WIDTH) / 2;
+    int startY = (SCREEN_HEIGHT - SLIME_HEIGHT) / 2 + SLIME_OFFSET_Y;
 
     // Only clear and redraw if frame changed
     if (slimeToggle != lastToggle) {
-        tft.fillRect(startX, startY, scaledWidth, scaledHeight, ST77XX_BLACK);
+        tft.fillRect(startX, startY, SLIME_WIDTH, SLIME_HEIGHT, ST77XX_BLACK);
         lastToggle = slimeToggle;
     }
 
@@ -164,7 +158,7 @@ void slimeDraw(uint16_t color) {
     for (int y = 0; y < SLIME_HEIGHT; y++) {
         for (int x = 0; x < SLIME_WIDTH; x++) {
             if (body[y] & (1ULL << (SLIME_WIDTH - 1 - x))) {
-                drawBlock(startX + x * SLIME_SCALE, startY + y * SLIME_SCALE, color, SLIME_SCALE);
+                drawBlock(startX + x, startY + y, color);
             }
         }
     }

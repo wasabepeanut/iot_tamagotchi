@@ -6,7 +6,6 @@
 
 void displayInit() {
     monitorInit();
-    slimeDraw(ST77XX_BLUE);
     statsInit();
 }
 

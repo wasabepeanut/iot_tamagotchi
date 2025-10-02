@@ -28,11 +28,11 @@ void controlsUpdate() {
     greenButton.update();
 
     bool blueState = blueButton.getState();
-    if (blueState && !prevBlueState) { myPet.food = myPet.energy = myPet.happiness = 10; petSave(); }
+    if (blueState && !prevBlueState) { myPet.happiness = myPet.energy = myPet.health = 10; petSave(); }
     prevBlueState = blueState;
 
     bool redState = redButton.getState();
-    if (redState && !prevRedState) { myPet.food = min(100, myPet.food + 10); petSave(); }
+    if (redState && !prevRedState) { myPet.health = min(100, myPet.health + 10); petSave(); }
     prevRedState = redState;
 
     bool yellowState = yellowButton.getState();

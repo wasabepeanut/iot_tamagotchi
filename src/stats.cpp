@@ -3,17 +3,11 @@
 #include "pet.h"
 
 // --- Previous values for dirty-checking ---
-static int prevFood = -1;
-static int prevEnergy = -1;
 static int prevHappiness = -1;
+static int prevEnergy = -1;
+static int prevHealth = -1;
 
 // --- Stat icons (8x8 bitmaps) ---
-static const uint8_t foodIcon[10] = {
-    0b01100110,0b11111111,0b11111111,0b11111111,
-    0b01111110,0b00111100,0b00011000,0b00000000,
-    0b00000000,0b00000000
-};
-
 static const uint8_t happinessIcon[10] = {
     0b00111100,0b01000010,0b10100101,0b10000001,
     0b10100101,0b10011001,0b01000010,0b00111100,
@@ -23,6 +17,12 @@ static const uint8_t happinessIcon[10] = {
 static const uint8_t energyIcon[10] = {
     0b00000100,0b00001100,0b00111000,0b01111000,
     0b00011100,0b00011000,0b00110000,0b01000000,
+    0b00000000,0b00000000
+};
+
+static const uint8_t healthIcon[10] = {
+    0b01100110,0b11111111,0b11111111,0b11111111,
+    0b01111110,0b00111100,0b00011000,0b00000000,
     0b00000000,0b00000000
 };
 
@@ -61,15 +61,15 @@ static void drawStats() {
 
     int xHappy  = spacing;
     int xEnergy = spacing * 2 + barWidth;
-    int xFood   = spacing * 3 + barWidth * 2;
+    int xHealth = spacing * 3 + barWidth * 2;
 
     drawBar(xHappy,  y, myPet.happiness, prevHappiness, ST77XX_GREEN,  happinessIcon, 10);
     drawBar(xEnergy, y, myPet.energy,    prevEnergy,    ST77XX_YELLOW, energyIcon,   10);
-    drawBar(xFood,   y, myPet.food,      prevFood,      ST77XX_RED,    foodIcon,     10);
+    drawBar(xHealth, y, myPet.health,    prevHealth,    ST77XX_RED,    healthIcon,   10);
 
-    prevFood = myPet.food;
     prevHappiness = myPet.happiness;
     prevEnergy = myPet.energy;
+    prevHealth = myPet.health;
 }
 
 // --- Public API ---
@@ -78,11 +78,11 @@ void statsInit() {
 }
 
 void statsUpdate() {
-    if (myPet.food != prevFood || myPet.energy != prevEnergy || myPet.happiness != prevHappiness) {
+    if (myPet.happiness != prevHappiness || myPet.energy != prevEnergy || myPet.health != prevHealth) {
         drawStats();
     }
 }
 
 float getPetStatAverage() {
-    return (myPet.food + myPet.energy + myPet.happiness) / 3.0f;
+    return (myPet.happiness + myPet.energy + myPet.health) / 3.0f;
 }
