@@ -9,73 +9,92 @@ static unsigned long lastButtonPress = 0;
 #include "button.h"
 #include "pet.h"
 
-// Buttons (no blue reset button)
+// Buttons
+static Button blueButton(25);
 static Button redButton(26);
 static Button yellowButton(27);
 static Button greenButton(14);
 
 // Previous states
+static bool prevBlueState = false;
 static bool prevRedState = false;
 static bool prevYellowState = false;
 static bool prevGreenState = false;
 
 void controlsInit() {
+    blueButton.begin();
     redButton.begin();
     yellowButton.begin();
     greenButton.begin();
 }
 
+// Message pools for each button
+const char* redMessages[] = {"Yummy", "Delicious!", "Tasty!", "Nom nom", "So good!"};
+const int redMsgCount = sizeof(redMessages)/sizeof(redMessages[0]);
+const char* yellowMessages[] = {"Zzz...", "Sleepy", "Rest time", "Dreaming", "Good night"};
+const int yellowMsgCount = sizeof(yellowMessages)/sizeof(yellowMessages[0]);
+const char* greenMessages[] = {"I love jumping", "Fun!", "Let's play!", "Whee!", "Yay!"};
+const int greenMsgCount = sizeof(greenMessages)/sizeof(greenMessages[0]);
+
 void controlsUpdate() {
+    blueButton.update();
     redButton.update();
     yellowButton.update();
     greenButton.update();
 
     unsigned long now = millis();
-    bool redState = redButton.getState();
-    bool yellowState = yellowButton.getState();
-    bool greenState = greenButton.getState();
+    bool blueState = blueButton.getState();
+    if (blueState && !prevBlueState && (now - lastButtonPress > BUTTON_COOLDOWN)) {
+        int points = random(5, 16); // 5 to 15
+        myPet.happiness = myPet.energy = myPet.health = points;
+        petSave();
+        lastButtonPress = now;
+    }
+    prevBlueState = blueState;
 
     if (isPetAlive()) {
+        bool redState = redButton.getState();
         if (redState && !prevRedState && (now - lastButtonPress > BUTTON_COOLDOWN)) {
             int points = random(5, 16);
             myPet.health = min(100, myPet.health + points);
             petSave();
             lastButtonPress = now;
-            strncpy(slimeMessage, "Yummy", sizeof(slimeMessage));
+            int msgIdx = random(0, redMsgCount);
+            strncpy(slimeMessage, redMessages[msgIdx], sizeof(slimeMessage));
+            slimeMessage[sizeof(slimeMessage)-1] = '\0';
             messageExpire = now + BUTTON_COOLDOWN;
         }
         prevRedState = redState;
 
+        bool yellowState = yellowButton.getState();
         if (yellowState && !prevYellowState && (now - lastButtonPress > BUTTON_COOLDOWN)) {
             int points = random(5, 16);
             myPet.energy = min(100, myPet.energy + points);
             petSave();
             lastButtonPress = now;
-            strncpy(slimeMessage, "Zzz...", sizeof(slimeMessage));
+            int msgIdx = random(0, yellowMsgCount);
+            strncpy(slimeMessage, yellowMessages[msgIdx], sizeof(slimeMessage));
+            slimeMessage[sizeof(slimeMessage)-1] = '\0';
             messageExpire = now + BUTTON_COOLDOWN;
         }
         prevYellowState = yellowState;
 
+        bool greenState = greenButton.getState();
         if (greenState && !prevGreenState && (now - lastButtonPress > BUTTON_COOLDOWN)) {
             int points = random(5, 16);
             myPet.happiness = min(100, myPet.happiness + points);
             petSave();
             lastButtonPress = now;
-            strncpy(slimeMessage, "I love jumping", sizeof(slimeMessage));
+            int msgIdx = random(0, greenMsgCount);
+            strncpy(slimeMessage, greenMessages[msgIdx], sizeof(slimeMessage));
+            slimeMessage[sizeof(slimeMessage)-1] = '\0';
             messageExpire = now + BUTTON_COOLDOWN;
         }
         prevGreenState = greenState;
     } else {
-        // When pet is dead, any of the three buttons resets the pet
-        if (((redState && !prevRedState) || (yellowState && !prevYellowState) || (greenState && !prevGreenState)) && (now - lastButtonPress > BUTTON_COOLDOWN)) {
-            int points = random(5, 16); // 5 to 15
-            myPet.happiness = myPet.energy = myPet.health = points;
-            petSave();
-            lastButtonPress = now;
-        }
-        prevRedState = redState;
-        prevYellowState = yellowState;
-        prevGreenState = greenState;
+        prevRedState = redButton.getState();
+        prevYellowState = yellowButton.getState();
+        prevGreenState = greenButton.getState();
     }
     // Clear message after cooldown (always runs)
     if (slimeMessage[0] && now > messageExpire) {
