@@ -1,9 +1,6 @@
-// --- Cooldown settings (ms) ---
+// --- Universal Cooldown settings (ms) ---
 constexpr unsigned long BUTTON_COOLDOWN = 2000; // 2 seconds
-static unsigned long lastBluePress = 0;
-static unsigned long lastRedPress = 0;
-static unsigned long lastYellowPress = 0;
-static unsigned long lastGreenPress = 0;
+static unsigned long lastButtonPress = 0;
 #include "controls.h"
 #include "button.h"
 #include "pet.h"
@@ -35,39 +32,39 @@ void controlsUpdate() {
 
     unsigned long now = millis();
     bool blueState = blueButton.getState();
-    if (blueState && !prevBlueState && (now - lastBluePress > BUTTON_COOLDOWN)) {
+    if (blueState && !prevBlueState && (now - lastButtonPress > BUTTON_COOLDOWN)) {
         int points = random(5, 16); // 5 to 15
         myPet.happiness = myPet.energy = myPet.health = points;
         petSave();
-        lastBluePress = now;
+        lastButtonPress = now;
     }
     prevBlueState = blueState;
 
     if (isPetAlive()) {
         bool redState = redButton.getState();
-        if (redState && !prevRedState && (now - lastRedPress > BUTTON_COOLDOWN)) {
+        if (redState && !prevRedState && (now - lastButtonPress > BUTTON_COOLDOWN)) {
             int points = random(5, 16);
             myPet.health = min(100, myPet.health + points);
             petSave();
-            lastRedPress = now;
+            lastButtonPress = now;
         }
         prevRedState = redState;
 
         bool yellowState = yellowButton.getState();
-        if (yellowState && !prevYellowState && (now - lastYellowPress > BUTTON_COOLDOWN)) {
+        if (yellowState && !prevYellowState && (now - lastButtonPress > BUTTON_COOLDOWN)) {
             int points = random(5, 16);
             myPet.energy = min(100, myPet.energy + points);
             petSave();
-            lastYellowPress = now;
+            lastButtonPress = now;
         }
         prevYellowState = yellowState;
 
         bool greenState = greenButton.getState();
-        if (greenState && !prevGreenState && (now - lastGreenPress > BUTTON_COOLDOWN)) {
+        if (greenState && !prevGreenState && (now - lastButtonPress > BUTTON_COOLDOWN)) {
             int points = random(5, 16);
             myPet.happiness = min(100, myPet.happiness + points);
             petSave();
-            lastGreenPress = now;
+            lastButtonPress = now;
         }
         prevGreenState = greenState;
     } else {
