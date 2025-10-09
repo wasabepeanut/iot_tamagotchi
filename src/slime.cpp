@@ -147,6 +147,17 @@ void slimeDraw(uint16_t color) {
     int startX = (SCREEN_WIDTH - SLIME_WIDTH) / 2;
     int startY = (SCREEN_HEIGHT - SLIME_HEIGHT) / 2 + SLIME_OFFSET_Y;
 
+    // Draw speech bubble/message above the sprite if set
+    extern char slimeMessage[16];
+    if (slimeMessage[0]) {
+        tft.setTextColor(ST77XX_WHITE, ST77XX_BLACK);
+        tft.setTextSize(1);
+        int msgX = startX + SLIME_WIDTH/2 - 20;
+        int msgY = startY - 16; // Move text higher above the sprite
+        tft.setCursor(msgX, msgY);
+        tft.print(slimeMessage);
+    }
+
     // Only clear and redraw if frame changed
     if (slimeToggle != lastToggle) {
         tft.fillRect(startX, startY, SLIME_WIDTH, SLIME_HEIGHT, ST77XX_BLACK);

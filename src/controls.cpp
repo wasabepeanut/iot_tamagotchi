@@ -1,3 +1,7 @@
+#include <string.h>
+#include "slime.h" // For extern slimeMessage
+char slimeMessage[16] = "";
+static unsigned long messageExpire = 0;
 // --- Universal Cooldown settings (ms) ---
 constexpr unsigned long BUTTON_COOLDOWN = 2000; // 2 seconds
 static unsigned long lastButtonPress = 0;
@@ -37,6 +41,8 @@ void controlsUpdate() {
         myPet.happiness = myPet.energy = myPet.health = points;
         petSave();
         lastButtonPress = now;
+        strncpy(slimeMessage, "RESET!", sizeof(slimeMessage));
+        messageExpire = now + BUTTON_COOLDOWN;
     }
     prevBlueState = blueState;
 
@@ -47,6 +53,8 @@ void controlsUpdate() {
             myPet.health = min(100, myPet.health + points);
             petSave();
             lastButtonPress = now;
+            strncpy(slimeMessage, "yummy", sizeof(slimeMessage));
+            messageExpire = now + BUTTON_COOLDOWN;
         }
         prevRedState = redState;
 
@@ -56,6 +64,8 @@ void controlsUpdate() {
             myPet.energy = min(100, myPet.energy + points);
             petSave();
             lastButtonPress = now;
+            strncpy(slimeMessage, "zzz", sizeof(slimeMessage));
+            messageExpire = now + BUTTON_COOLDOWN;
         }
         prevYellowState = yellowState;
 
@@ -65,7 +75,13 @@ void controlsUpdate() {
             myPet.happiness = min(100, myPet.happiness + points);
             petSave();
             lastButtonPress = now;
+            strncpy(slimeMessage, "fun", sizeof(slimeMessage));
+            messageExpire = now + BUTTON_COOLDOWN;
         }
+    // Clear message after cooldown
+    if (slimeMessage[0] && now > messageExpire) {
+        slimeMessage[0] = '\0';
+    }
         prevGreenState = greenState;
     } else {
         prevRedState = redButton.getState();

@@ -1,3 +1,4 @@
+extern char slimeMessage[16];
 #ifndef SLIME_H
 #define SLIME_H
 
