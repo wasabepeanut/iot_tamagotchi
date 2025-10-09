@@ -1,4 +1,5 @@
 #include "pet.h"
+#include "score.h"
 #include <EEPROM.h>
 
 
@@ -65,6 +66,10 @@ void petUpdate() {
     if (petWasAlive && !isPetAlive()) {
         petDeathMillis = now;
         petWasAlive = false;
+        // Send lifetime to server
+        unsigned long aliveMillis = petDeathMillis - petBirthMillis;
+        unsigned long seconds = aliveMillis / 1000;
+        sendPetLifetime(seconds);
     }
     if (!petWasAlive && isPetAlive()) {
            // Pet revived, reset birth time
