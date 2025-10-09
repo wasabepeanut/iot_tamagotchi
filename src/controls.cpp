@@ -45,13 +45,21 @@ void controlsUpdate() {
 
     if (isPetAlive()) {
         if (redState && !prevRedState && (now - lastButtonPress > BUTTON_COOLDOWN)) {
-            int points = random(5, 16);
+            int rare = random(0, 100) < 5; // 5% chance
+            int points;
+            if (rare) {
+                points = 50;
+                strncpy(slimeMessage, "RARE FEAST! +50", sizeof(slimeMessage));
+                slimeMessage[sizeof(slimeMessage)-1] = '\0';
+            } else {
+                points = random(5, 16);
+                int msgIdx = random(0, redMsgCount);
+                strncpy(slimeMessage, redMessages[msgIdx], sizeof(slimeMessage));
+                slimeMessage[sizeof(slimeMessage)-1] = '\0';
+            }
             myPet.health = min(100, myPet.health + points);
             petSave();
             lastButtonPress = now;
-            int msgIdx = random(0, redMsgCount);
-            strncpy(slimeMessage, redMessages[msgIdx], sizeof(slimeMessage));
-            slimeMessage[sizeof(slimeMessage)-1] = '\0';
             messageExpire = now + BUTTON_COOLDOWN;
         }
         prevRedState = redState;
@@ -69,13 +77,21 @@ void controlsUpdate() {
         prevYellowState = yellowState;
 
         if (greenState && !prevGreenState && (now - lastButtonPress > BUTTON_COOLDOWN)) {
-            int points = random(5, 16);
+            int rare = random(0, 100) < 5; // 5% chance
+            int points;
+            if (rare) {
+                points = 50;
+                strncpy(slimeMessage, "SUPER JUMP! +50", sizeof(slimeMessage));
+                slimeMessage[sizeof(slimeMessage)-1] = '\0';
+            } else {
+                points = random(5, 16);
+                int msgIdx = random(0, greenMsgCount);
+                strncpy(slimeMessage, greenMessages[msgIdx], sizeof(slimeMessage));
+                slimeMessage[sizeof(slimeMessage)-1] = '\0';
+            }
             myPet.happiness = min(100, myPet.happiness + points);
             petSave();
             lastButtonPress = now;
-            int msgIdx = random(0, greenMsgCount);
-            strncpy(slimeMessage, greenMessages[msgIdx], sizeof(slimeMessage));
-            slimeMessage[sizeof(slimeMessage)-1] = '\0';
             messageExpire = now + BUTTON_COOLDOWN;
         }
         prevGreenState = greenState;
