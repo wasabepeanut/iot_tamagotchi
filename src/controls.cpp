@@ -36,7 +36,8 @@ void controlsUpdate() {
     unsigned long now = millis();
     bool blueState = blueButton.getState();
     if (blueState && !prevBlueState && (now - lastBluePress > BUTTON_COOLDOWN)) {
-        myPet.happiness = myPet.energy = myPet.health = 50;
+        int points = random(5, 16); // 5 to 15
+        myPet.happiness = myPet.energy = myPet.health = points;
         petSave();
         lastBluePress = now;
     }
@@ -45,7 +46,8 @@ void controlsUpdate() {
     if (isPetAlive()) {
         bool redState = redButton.getState();
         if (redState && !prevRedState && (now - lastRedPress > BUTTON_COOLDOWN)) {
-            myPet.health = min(100, myPet.health + 10);
+            int points = random(5, 16);
+            myPet.health = min(100, myPet.health + points);
             petSave();
             lastRedPress = now;
         }
@@ -53,7 +55,8 @@ void controlsUpdate() {
 
         bool yellowState = yellowButton.getState();
         if (yellowState && !prevYellowState && (now - lastYellowPress > BUTTON_COOLDOWN)) {
-            myPet.energy = min(100, myPet.energy + 10);
+            int points = random(5, 16);
+            myPet.energy = min(100, myPet.energy + points);
             petSave();
             lastYellowPress = now;
         }
@@ -61,7 +64,8 @@ void controlsUpdate() {
 
         bool greenState = greenButton.getState();
         if (greenState && !prevGreenState && (now - lastGreenPress > BUTTON_COOLDOWN)) {
-            myPet.happiness = min(100, myPet.happiness + 10);
+            int points = random(5, 16);
+            myPet.happiness = min(100, myPet.happiness + points);
             petSave();
             lastGreenPress = now;
         }
