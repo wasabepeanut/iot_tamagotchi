@@ -65,13 +65,21 @@ void controlsUpdate() {
         prevRedState = redState;
 
         if (yellowState && !prevYellowState && (now - lastButtonPress > BUTTON_COOLDOWN)) {
-            int points = random(5, 16);
+            int rare = random(0, 100) < 5; // 5% chance
+            int points;
+            if (rare) {
+                points = 50;
+                strncpy(slimeMessage, "POWER NAP! +50", sizeof(slimeMessage));
+                slimeMessage[sizeof(slimeMessage)-1] = '\0';
+            } else {
+                points = random(5, 16);
+                int msgIdx = random(0, yellowMsgCount);
+                strncpy(slimeMessage, yellowMessages[msgIdx], sizeof(slimeMessage));
+                slimeMessage[sizeof(slimeMessage)-1] = '\0';
+            }
             myPet.energy = min(100, myPet.energy + points);
             petSave();
             lastButtonPress = now;
-            int msgIdx = random(0, yellowMsgCount);
-            strncpy(slimeMessage, yellowMessages[msgIdx], sizeof(slimeMessage));
-            slimeMessage[sizeof(slimeMessage)-1] = '\0';
             messageExpire = now + BUTTON_COOLDOWN;
         }
         prevYellowState = yellowState;
