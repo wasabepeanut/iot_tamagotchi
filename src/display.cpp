@@ -34,17 +34,21 @@ void displayUpdate() {
 void displayAliveTimer() {
     static String lastTimerStr = "";
     static bool lastWasDead = false;
+    static String lastDeathMsg = "";
     if (!isPetAlive()) {
         String timerStr = getPetAliveTimeString();
-        if (!lastWasDead || timerStr != lastTimerStr) {
+        unsigned long now = millis();
+        String deathMsg = ((now / 3000) % 2 == 0) ? "Your pet has died" : "Press any button to replay";
+        if (!lastWasDead || timerStr != lastTimerStr || deathMsg != lastDeathMsg) {
             int timerHeight = 16;
             // Clear area for both timer and death message
             clearArea(0, SCREEN_HEIGHT - timerHeight - 20, SCREEN_WIDTH, timerHeight + 20);
-            // Draw death message above timer, same size and color as timer text
-            drawText("Your pet has died", ST77XX_WHITE, 10, SCREEN_HEIGHT - timerHeight - 18, 1);
+            // Draw alternating death message above timer
+            drawText(deathMsg.c_str(), ST77XX_WHITE, 10, SCREEN_HEIGHT - timerHeight - 18, 1);
             drawText("Alive:", ST77XX_WHITE, 10, SCREEN_HEIGHT - timerHeight + 2, 1);
             drawText(timerStr.c_str(), ST77XX_WHITE, 60, SCREEN_HEIGHT - timerHeight + 2, 1);
             lastTimerStr = timerStr;
+            lastDeathMsg = deathMsg;
         }
         lastWasDead = true;
     } else {
@@ -53,6 +57,7 @@ void displayAliveTimer() {
         clearArea(0, SCREEN_HEIGHT - timerHeight - 20, SCREEN_WIDTH, timerHeight + 20);
         lastWasDead = false;
         lastTimerStr = "";
+        lastDeathMsg = "";
     }
 }
 
