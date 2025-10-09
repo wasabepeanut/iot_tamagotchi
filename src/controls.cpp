@@ -41,8 +41,6 @@ void controlsUpdate() {
         myPet.happiness = myPet.energy = myPet.health = points;
         petSave();
         lastButtonPress = now;
-        strncpy(slimeMessage, "RESET!", sizeof(slimeMessage));
-        messageExpire = now + BUTTON_COOLDOWN;
     }
     prevBlueState = blueState;
 
@@ -53,7 +51,7 @@ void controlsUpdate() {
             myPet.health = min(100, myPet.health + points);
             petSave();
             lastButtonPress = now;
-            strncpy(slimeMessage, "yummy", sizeof(slimeMessage));
+            strncpy(slimeMessage, "Yummy", sizeof(slimeMessage));
             messageExpire = now + BUTTON_COOLDOWN;
         }
         prevRedState = redState;
@@ -64,7 +62,7 @@ void controlsUpdate() {
             myPet.energy = min(100, myPet.energy + points);
             petSave();
             lastButtonPress = now;
-            strncpy(slimeMessage, "zzz", sizeof(slimeMessage));
+            strncpy(slimeMessage, "Zzz...", sizeof(slimeMessage));
             messageExpire = now + BUTTON_COOLDOWN;
         }
         prevYellowState = yellowState;
@@ -75,17 +73,17 @@ void controlsUpdate() {
             myPet.happiness = min(100, myPet.happiness + points);
             petSave();
             lastButtonPress = now;
-            strncpy(slimeMessage, "fun", sizeof(slimeMessage));
+            strncpy(slimeMessage, "I love jumping", sizeof(slimeMessage));
             messageExpire = now + BUTTON_COOLDOWN;
         }
-    // Clear message after cooldown
-    if (slimeMessage[0] && now > messageExpire) {
-        slimeMessage[0] = '\0';
-    }
         prevGreenState = greenState;
     } else {
         prevRedState = redButton.getState();
         prevYellowState = yellowButton.getState();
         prevGreenState = greenButton.getState();
+    }
+    // Clear message after cooldown (always runs)
+    if (slimeMessage[0] && now > messageExpire) {
+        slimeMessage[0] = '\0';
     }
 }

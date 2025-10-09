@@ -147,15 +147,25 @@ void slimeDraw(uint16_t color) {
     int startX = (SCREEN_WIDTH - SLIME_WIDTH) / 2;
     int startY = (SCREEN_HEIGHT - SLIME_HEIGHT) / 2 + SLIME_OFFSET_Y;
 
-    // Draw speech bubble/message above the sprite if set
+    // Draw speech bubble/message above the sprite if set, else clear the area
     extern char slimeMessage[16];
+    int msgY = startY - 16;
+    int textSize = 1;
+    int charWidth = 6 * textSize; // Adafruit_GFX default font width per char
+    int maxMsgLen = 15; // slimeMessage[16] max 15 chars + null
+    int maxPixelWidth = maxMsgLen * charWidth;
+    int msgLen = strlen(slimeMessage);
+    int msgPixelWidth = msgLen * charWidth;
+    int msgX = startX + (SLIME_WIDTH - msgPixelWidth) / 2;
     if (slimeMessage[0]) {
         tft.setTextColor(ST77XX_WHITE, ST77XX_BLACK);
-        tft.setTextSize(1);
-        int msgX = startX + SLIME_WIDTH/2 - 20;
-        int msgY = startY - 16; // Move text higher above the sprite
+        tft.setTextSize(textSize);
         tft.setCursor(msgX, msgY);
         tft.print(slimeMessage);
+    } else {
+        // Clear the entire possible message area (centered for max width)
+        int clearX = startX + (SLIME_WIDTH - maxPixelWidth) / 2;
+        tft.fillRect(clearX, msgY, maxPixelWidth, 10, ST77XX_BLACK);
     }
 
     // Only clear and redraw if frame changed
