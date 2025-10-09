@@ -1,3 +1,9 @@
+// --- Cooldown settings (ms) ---
+constexpr unsigned long BUTTON_COOLDOWN = 2000; // 2 seconds
+static unsigned long lastBluePress = 0;
+static unsigned long lastRedPress = 0;
+static unsigned long lastYellowPress = 0;
+static unsigned long lastGreenPress = 0;
 #include "controls.h"
 #include "button.h"
 #include "pet.h"
@@ -27,21 +33,38 @@ void controlsUpdate() {
     yellowButton.update();
     greenButton.update();
 
+    unsigned long now = millis();
     bool blueState = blueButton.getState();
-    if (blueState && !prevBlueState) { myPet.happiness = myPet.energy = myPet.health = 50; petSave(); }
+    if (blueState && !prevBlueState && (now - lastBluePress > BUTTON_COOLDOWN)) {
+        myPet.happiness = myPet.energy = myPet.health = 50;
+        petSave();
+        lastBluePress = now;
+    }
     prevBlueState = blueState;
 
     if (isPetAlive()) {
         bool redState = redButton.getState();
-        if (redState && !prevRedState) { myPet.health = min(100, myPet.health + 10); petSave(); }
+        if (redState && !prevRedState && (now - lastRedPress > BUTTON_COOLDOWN)) {
+            myPet.health = min(100, myPet.health + 10);
+            petSave();
+            lastRedPress = now;
+        }
         prevRedState = redState;
 
         bool yellowState = yellowButton.getState();
-        if (yellowState && !prevYellowState) { myPet.energy = min(100, myPet.energy + 10); petSave(); }
+        if (yellowState && !prevYellowState && (now - lastYellowPress > BUTTON_COOLDOWN)) {
+            myPet.energy = min(100, myPet.energy + 10);
+            petSave();
+            lastYellowPress = now;
+        }
         prevYellowState = yellowState;
 
         bool greenState = greenButton.getState();
-        if (greenState && !prevGreenState) { myPet.happiness = min(100, myPet.happiness + 10); petSave(); }
+        if (greenState && !prevGreenState && (now - lastGreenPress > BUTTON_COOLDOWN)) {
+            myPet.happiness = min(100, myPet.happiness + 10);
+            petSave();
+            lastGreenPress = now;
+        }
         prevGreenState = greenState;
     } else {
         prevRedState = redButton.getState();
