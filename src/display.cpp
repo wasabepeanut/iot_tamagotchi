@@ -48,6 +48,9 @@ void displayAliveTimer() {
         }
         lastWasDead = true;
     } else {
+        // Clear the area so no text is visible when pet is alive
+        int timerHeight = 16;
+        clearArea(0, SCREEN_HEIGHT - timerHeight - 20, SCREEN_WIDTH, timerHeight + 20);
         lastWasDead = false;
         lastTimerStr = "";
     }
